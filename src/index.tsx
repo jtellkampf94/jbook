@@ -6,6 +6,7 @@ import { fetchPlugin } from "./plugins/fetch-plugin";
 
 const App: React.FC = () => {
   const ref = useRef<any>();
+  const iframe = useRef<any>();
   const [input, setInput] = useState("");
   const [code, setCode] = useState("");
 
@@ -36,9 +37,23 @@ const App: React.FC = () => {
       }
     });
 
-    setCode(result.outputFiles[0].text);
+    // setCode(result.outputFiles[0].text);
+    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, "*");
   };
 
+  const html = `
+    <html>
+      <head></head>
+      <body>
+        <div id="root"></div>
+        <script>
+          window.addEventListener('message', (event) => {
+           eval(event.data)
+          }, false)
+        </script>
+      </body>
+    </html>
+  `;
   return (
     <div>
       <textarea
@@ -49,6 +64,7 @@ const App: React.FC = () => {
         <button onClick={onClick}>Submit</button>
       </div>
       <pre>{code}</pre>
+      <iframe ref={iframe} sandbox="allow-scripts" srcDoc={html}></iframe>
     </div>
   );
 };
