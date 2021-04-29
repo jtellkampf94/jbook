@@ -26,6 +26,8 @@ const App: React.FC = () => {
       return;
     }
 
+    iframe.current.srcdoc = html;
+
     const result = await ref.current.build({
       entryPoints: ["index.js"],
       bundle: true,
@@ -48,7 +50,13 @@ const App: React.FC = () => {
         <div id="root"></div>
         <script>
           window.addEventListener('message', (event) => {
-           eval(event.data)
+            try {
+              eval(event.data)
+            } catch (error) {
+              const root = document.querySelector('#root')
+              root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + error + '</div>'
+              throw err;
+            }
           }, false)
         </script>
       </body>
