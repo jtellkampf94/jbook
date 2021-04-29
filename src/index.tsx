@@ -12,7 +12,7 @@ const App: React.FC = () => {
   const startService = async () => {
     ref.current = await esbuild.startService({
       worker: true,
-      wasmURL: "/esbuild.wasm"
+      wasmURL: "https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm"
     });
   };
 
@@ -35,8 +35,6 @@ const App: React.FC = () => {
         global: "window"
       }
     });
-
-    // console.log(result);
 
     setCode(result.outputFiles[0].text);
   };
