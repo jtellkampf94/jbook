@@ -6,12 +6,14 @@ import Resizable from "./resizable";
 
 const CodeCell: React.FC = () => {
   const [code, setCode] = useState("");
+  const [error, setError] = useState("");
   const [input, setInput] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(async () => {
       const output = await bundle(input);
-      setCode(output);
+      setCode(output.code);
+      setError(output.error);
     }, 1000);
 
     return () => {
@@ -28,7 +30,7 @@ const CodeCell: React.FC = () => {
             onChange={value => setInput(value)}
           />
         </Resizable>
-        <Preview code={code} />
+        <Preview code={code} error={error} />
       </div>
     </Resizable>
   );
